@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Prompt {
+public class PromptAndResponse {
     @Id
     @GeneratedValue
     private long id;
@@ -20,7 +20,7 @@ public class Prompt {
     @Lob
     private String response;
 
-    public Prompt(String prompt, String response) {
+    public PromptAndResponse(String prompt, String response) {
         this.prompt = prompt;
         this.response = response;
     }

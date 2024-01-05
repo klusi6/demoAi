@@ -1,36 +1,55 @@
 package org.example.demoai.controler;
 
+import lombok.AllArgsConstructor;
 import org.example.demoai.dto.ChatGPTRequest;
 import org.example.demoai.dto.ChatGPTResponse;
-import org.example.demoai.model.Prompt;
-import org.example.demoai.service.PromptService;
+import org.example.demoai.dto.Message;
+import org.example.demoai.dto.PnRdto;
+import org.example.demoai.model.PromptAndResponse;
+import org.example.demoai.service.PromptAndResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
-@RequestMapping("/bot")
+@RequestMapping("/api")
+@AllArgsConstructor
 public class BotController {
 
-    @Value("${openai.model}")
-    private String model;
 
-    @Value(("${openai.api.url}"))
-    private String apiUrl;
+    private final PromptAndResponseService promptAndResponseService;
 
-    @Autowired
-    private PromptService promptService;
-
-
-    @Autowired
-    private RestTemplate template;
 
     @PostMapping("/chat")
     public String chat(@RequestBody String prompt) {
-        ChatGPTRequest request = new ChatGPTRequest(model, prompt);
-        promptService.save(new Prompt(prompt, template.postForObject(apiUrl, request, ChatGPTResponse.class).getChoices().get(0).getMessage().getContent()));
-        return template.postForObject(apiUrl, request, ChatGPTResponse.class).getChoices().get(0).getMessage().getContent();
-
+       return promptAndResponseService.chat(prompt);
     }
+
+    @GetMapping("/chat")
+    public String getChat(@RequestParam String prompt) {
+        return promptAndResponseService.chat(prompt);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> welcome() {
+        return ResponseEntity.
+                ok(new Message
+                        ("bot",
+                                "You can enter /history to see the conversation." +
+                                        "For new prompt -> POST on /api/chat with the prompt as the body or" +
+                                        "GET with param on /api/chat?prompt=<yourPrompt>"
+                        ));
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<List<PnRdto>> history() {
+
+        return ResponseEntity.ok(promptAndResponseService.getAllDto());
+    }
+
 }
