@@ -21,22 +21,20 @@ import java.util.List;
 @AllArgsConstructor
 public class BotController {
 
-
     private final PromptAndResponseService promptAndResponseService;
-
 
     @PostMapping("/chat")
     public String chat(@RequestBody String prompt) {
-       return promptAndResponseService.chat(prompt);
-    }
-
-    @GetMapping("/chat")
-    public String getChat(@RequestParam String prompt) {
         return promptAndResponseService.chat(prompt);
     }
 
+    @GetMapping("/chat")
+    public ResponseEntity<PnRdto> getChat(@RequestParam String prompt) {
+        return ResponseEntity.ok(new PnRdto(prompt, promptAndResponseService.chat(prompt)));
+    }
+
     @GetMapping("")
-    public ResponseEntity<?> welcome() {
+    public ResponseEntity<Message> welcome() {
         return ResponseEntity.
                 ok(new Message
                         ("bot",
@@ -51,5 +49,4 @@ public class BotController {
 
         return ResponseEntity.ok(promptAndResponseService.getAllDto());
     }
-
 }
