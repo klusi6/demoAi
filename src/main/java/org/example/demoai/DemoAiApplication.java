@@ -19,6 +19,6 @@ public class DemoAiApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("Hello World!");
-        promptRepository.save(new Prompt(1, "What is your name?"));
+        promptRepository.save(new Prompt(1, "Whom do you serve","SARUMAN"));
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class PromptService {
 
-    PromptRepository promptRepository;
+   private final PromptRepository promptRepository;
 
     public PromptService(PromptRepository promptRepository) {
         this.promptRepository = promptRepository;
@@ -17,5 +17,9 @@ public class PromptService {
 
     public List<Prompt> getAll() {
         return promptRepository.findAll();
+    }
+
+    public void save(Prompt prompt) {
+        promptRepository.save(prompt);
     }
 }

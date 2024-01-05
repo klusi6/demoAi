@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ApiController {
 
-    PromptService promptService;
+    private final PromptService promptService;
 
     public ApiController(PromptService promptService) {
         this.promptService = promptService;
